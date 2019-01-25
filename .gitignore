@@ -1,0 +1,14 @@
+# Local only: 2 underscore prefix
+*\__*
+
+### Visual Studio
+*.sln
+*.user
+bin/
+obj/
+###### No makefiles:
+Properties/
+*.*proj
+### Visual D:
+Debug/
+.vs/
