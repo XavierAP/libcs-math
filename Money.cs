@@ -24,7 +24,9 @@ namespace JP.Maths
 		/// <returns>Yearly rate per 1, rounded off according to 'precision'.</returns>
 		public static double
 		SolveRateInvest(IEnumerable<(double Cash, DateTime Day)> flows,
-			(double Cash, DateTime Day) present, byte precision = precisionDefaultPer1)
+			(double Cash, DateTime Day) present,
+			byte precision = precisionDefaultPer1,
+			double guess = 0 )
 		{
 			// Cache flows into array and translate for more efficient iteration:
 			var flowsDiff = TranslateFlowToDiff(present.Day, flows).ToArray();
@@ -33,7 +35,7 @@ namespace JP.Maths
 			return Solve.Newton(
 				r => present.Cash + CalcNetPresentValue(r, flowsDiff),
 				r => DerivNetPresentValue(r, flowsDiff),
-				0, precision);
+				guess, precision);
 		}
 
 		/// <summary>Calculates the discount/interest rate that makes zero
@@ -45,9 +47,11 @@ namespace JP.Maths
 		/// <param name="precision">Precision digits with which the rate is to be found.</param>
 		/// <returns>Yearly rate per 1, rounded off according to 'precision'.</returns>
 		public static double
-		SolveRateInvest(IEnumerable<(double Cash, DateTime Day)> flows, byte precision = precisionDefaultPer1)
+		SolveRateInvest(IEnumerable<(double Cash, DateTime Day)> flows,
+			byte precision = precisionDefaultPer1,
+			double guess = 0 )
 		{
-			return SolveRateInvest(flows.Skip(1), flows.First(), precision);  // which time is considered "present" may be arbitrary, it shouldn't affect the solution -- perhaps the convergence.
+			return SolveRateInvest(flows.Skip(1), flows.First(), precision, guess);  // which time is considered "present" may be arbitrary, it shouldn't affect the solution -- perhaps the convergence.
 		}
 
 
