@@ -21,6 +21,7 @@ namespace JP.Maths
 		/// will be considered in the calculation, not fractions.</param>
 		/// <param name="present">Present Cash value and Day.</param>
 		/// <param name="precision">Precision digits with which the rate is to be found.</param>
+		/// <param name="guess">Initial guess of rate for the solver.</param>
 		/// <returns>Yearly rate per 1, rounded off according to 'precision'.</returns>
 		public static double
 		SolveRateInvest(IEnumerable<(double Cash, DateTime Day)> flows,
