@@ -22,7 +22,8 @@ namespace JP.Maths
 		/// <param name="present">Present Cash value and Day.</param>
 		/// <param name="precision">Precision digits with which the rate is to be found.</param>
 		/// <param name="guess">Initial guess of rate for the solver.</param>
-		/// <returns>Yearly rate per 1, rounded off according to 'precision'.</returns>
+		/// <returns>Yearly rate per 1, rounded off according to 'precision';
+		/// NaN if 'flows' is empty; or possibly infinite or nonsense value on failure to solve.</returns>
 		public static double
 		SolveRateInvest(IEnumerable<(double Cash, DateTime Day)> flows,
 			(double Cash, DateTime Day) present,
@@ -31,7 +32,7 @@ namespace JP.Maths
 		{
 			// Cache flows into array and translate for more efficient iteration:
 			var flowsDiff = TranslateFlowToDiff(present.Day, flows).ToArray();
-			if(flowsDiff.Length < 1) throw new ArgumentException("Cannot solve discount rate from a single cash flow.", "flows");
+			if(flowsDiff.Length < 1) return double.NaN;
 			
 			return Solve.Newton(
 				r => present.Cash + CalcNetPresentValue(r, flowsDiff),
