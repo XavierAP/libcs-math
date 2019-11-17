@@ -20,7 +20,7 @@ namespace JP.Maths
 		public static double
 		Newton(fn f, fn df, double x0, byte precision)
 		{
-			double tol = Math.Pow(10, -precision) / 4;
+			double tol = GetPrecisionTolerance(precision);
 			double x1 = x0;
 			do
 			{
@@ -43,7 +43,7 @@ namespace JP.Maths
 		public static double
 		Secant(fn f, double x0, double x1, byte precision)
 		{
-			double tol = Math.Pow(10, -precision) / 4;
+			double tol = GetPrecisionTolerance(precision);
 			while(tol <= Math.Abs(x1 - x0))
 			{
 				double
@@ -57,5 +57,7 @@ namespace JP.Maths
 			}
 			return Math.Round(x1, precision);
 		}
+
+		private static double GetPrecisionTolerance(byte precision) => Math.Pow(10, -precision) / 2;
 	}
 }
