@@ -43,6 +43,8 @@ namespace JP.Maths
 		public static double
 		Secant(fn f, double x0, double x1, byte precision)
 		{
+			if(x0 == x1) throw new DivideByZeroException();
+
 			double tol = GetPrecisionTolerance(precision);
 			while(tol <= Math.Abs(x1 - x0))
 			{
