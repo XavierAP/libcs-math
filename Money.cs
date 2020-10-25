@@ -8,9 +8,7 @@ namespace JP.Maths
 	/// <remarks>Rates are per 1, not per cent.</remarks>
 	public static class Money
 	{
-		private const byte
-			precisionDefault = 2, // default number of decimal places for money amounts
-			precisionDefaultPer1 = precisionDefault + 2; // default number of decimal places for rates per 1
+		private const byte precisionDefaultPer1 = 4;
 
 		/// <summary>Calculates the discount/interest rate that makes the net present
 		/// value of a set of cash flows equal to a given present value.</summary>
@@ -27,8 +25,7 @@ namespace JP.Maths
 		public static double
 		SolveRateInvest(IEnumerable<(double Cash, DateTime Day)> flows,
 			(double Cash, DateTime Day) present,
-			byte precision = precisionDefaultPer1,
-			double guess = 0 )
+			byte precision = precisionDefaultPer1)
 		{
 			// Cache flows into array and translate for more efficient iteration:
 			var flowsDiff = TranslateFlowToDiff(present.Day, flows).ToArray();
@@ -37,7 +34,7 @@ namespace JP.Maths
 			return Solve.Newton(
 				r => present.Cash + CalcNetPresentValue(r, flowsDiff),
 				r => DerivNetPresentValue(r, flowsDiff),
-				guess, precision);
+				GetRateInvestGuess(flowsDiff, present.Cash), precision);
 		}
 
 		/// <summary>Calculates the discount/interest rate that makes zero
@@ -50,10 +47,9 @@ namespace JP.Maths
 		/// <returns>Yearly rate per 1, rounded off according to 'precision'.</returns>
 		public static double
 		SolveRateInvest(IEnumerable<(double Cash, DateTime Day)> flows,
-			byte precision = precisionDefaultPer1,
-			double guess = 0 )
+			byte precision = precisionDefaultPer1)
 		{
-			return SolveRateInvest(flows.Skip(1), flows.First(), precision, guess);  // which time is considered "present" may be arbitrary, it shouldn't affect the solution -- perhaps the convergence.
+			return SolveRateInvest(flows.Skip(1), flows.First(), precision);  // which time is considered "present" may be arbitrary, it shouldn't affect the solution -- perhaps the convergence.
 		}
 
 
@@ -61,14 +57,14 @@ namespace JP.Maths
 		/// <param name="rate">Interest/discount rate.</param>
 		/// <param name="flowsDiff">Past or future cash flows. Needn't be ordered.
 		/// Cash: positive means money earned, and negative spent.
-		/// Years: elapsed from the time of the flow to the present.</param>
+		/// YearsAgo: elapsed from the time of the flow to the present.</param>
 		public static double
-		CalcNetPresentValue(double rate, IEnumerable<(double Cash, double Years)> flowsDiff)
+		CalcNetPresentValue(double rate, IEnumerable<(double Cash, double YearsAgo)> flowsDiff)
 		{
 			rate += 1;
 			return (
 				from cf in flowsDiff
-				select cf.Cash * Math.Pow(rate, cf.Years)
+				select cf.Cash * Math.Pow(rate, cf.YearsAgo)
 				).Sum();
 		}
 
@@ -89,17 +85,17 @@ namespace JP.Maths
 		/// <param name="rate">Interest/discount rate; independent variable of the derivative.</param>
 		/// <param name="flowsDiff">Past or future cash flows. Needn't be ordered; parameters.</param>
 		private static double
-		DerivNetPresentValue(double rate, IEnumerable<(double Cash, double Years)> flowsDiff)
+		DerivNetPresentValue(double rate, IEnumerable<(double Cash, double YearsAgo)> flowsDiff)
 		{
 			rate += 1;
 			return (
 				from cf in flowsDiff
-				select cf.Cash * cf.Years * Math.Pow(rate, cf.Years - 1)
+				select cf.Cash * cf.YearsAgo * Math.Pow(rate, cf.YearsAgo - 1)
 				).Sum();
 		}
 
 
-		/// <summary>Translates a set of cash flows from (double, DateTime) to (double, Years).
+		/// <summary>Translates a set of cash flows from (double, DateTime) to (double, YearsAgo).
 		/// This improves efficiency in case the NPV of the same cash flows at different rates
 		/// needs to be calculated e.g. by an interative solver.</summary>
 		/// <param name="presentDate">Present time.</param>
@@ -107,14 +103,40 @@ namespace JP.Maths
 		/// Cash: positive means money earned, and negative spent.
 		/// Day: only whole days elapsed from this to 'presentDate'
 		/// will be considered in the calculation, not fractions.</param>
-		private static IEnumerable<(double Cash, double Years)>
+		private static IEnumerable<(double Cash, double YearsAgo)>
 		TranslateFlowToDiff(DateTime presentDate, IEnumerable<(double Cash, DateTime Day)> flows)
 		{
 			presentDate = presentDate.ToLocalTime(); // DateTimes must be alike referenced before subtracting
 			return (
 				from cf in flows
-				select ( Cash: cf.Cash, Years: (double)(presentDate - cf.Day.ToLocalTime()).Days / 365.25 )
+				select ( Cash: cf.Cash, YearsAgo: (double)(presentDate - cf.Day.ToLocalTime()).Days / 365.25 )
 				);
+		}
+
+		private static double GetRateInvestGuess(IEnumerable<(double Cash, double YearsAgo)> flowsDiff, double presentValue)
+		{
+			double
+				value = presentValue,
+				cost = 0,
+				earliest = double.NegativeInfinity,
+				latest = double.PositiveInfinity;
+
+			foreach(var flow in flowsDiff)
+			{
+				if(flow.Cash > 0)
+					value += flow.Cash;
+				else
+					cost -= flow.Cash;
+
+				if(flow.YearsAgo > earliest)
+					earliest = flow.YearsAgo;
+				if(flow.YearsAgo < latest)
+					latest = flow.YearsAgo;
+			}
+			if(presentValue != 0)
+				latest = 0;
+
+			return Math.Pow(value / cost, 1 / (earliest - latest)) - 1;
 		}
 	}
 }

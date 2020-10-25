@@ -2,6 +2,7 @@
 *\__*
 
 ### Visual Studio
+**/.editorconfig
 *.sln
 *.user
 bin/
