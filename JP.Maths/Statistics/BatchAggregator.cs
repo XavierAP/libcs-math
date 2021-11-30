@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace JP.Maths.Statistics
 {
@@ -12,7 +11,7 @@ namespace JP.Maths.Statistics
 		public void Add<T>()
 			where T : IAggregateFunction, new()
 		{
-			if(null != GetFunction<T>())
+			if(IsAlreadyAdded<T>())
 				return;
 
 			var afunc = new T();
@@ -41,6 +40,12 @@ namespace JP.Maths.Statistics
 			where T : IAggregateFunction
 		{
 			return Functions.Find(a => a is T);
+		}
+
+		private bool IsAlreadyAdded<T>()
+			where T : IAggregateFunction, new()
+		{
+			return null != GetFunction<T>();
 		}
 	}
 }

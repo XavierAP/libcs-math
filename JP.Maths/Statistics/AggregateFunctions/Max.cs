@@ -1,12 +1,12 @@
 ﻿namespace JP.Maths.Statistics
 {
-	public sealed class Minimum : SimpleAggregateFunction
+	public sealed class Max : SimpleAggregateFunction
 	{
-		private double Result = double.PositiveInfinity;
+		private double Result = double.NegativeInfinity;
 
 		public override void Aggregate(double samplePoint)
 		{
-			if (samplePoint < Result)
+			if (samplePoint > Result)
 				Result = samplePoint;
 		}
 

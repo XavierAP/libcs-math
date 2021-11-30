@@ -9,8 +9,8 @@ namespace JP.Maths.Statistics
 		static void Main()
 		{
 			var stats = new BatchAggregator();
-			stats.Add<Minimum>();
-			stats.Add<Maximum>();
+			stats.Add<Min>();
+			stats.Add<Max>();
 			stats.Add<Average>();
 			
 			var timer = new Stopwatch();
