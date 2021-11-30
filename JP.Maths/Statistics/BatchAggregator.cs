@@ -15,8 +15,8 @@ namespace JP.Maths.Statistics
 				return;
 
 			var afunc = new T();
-			Functions.Add(afunc);
 			afunc.AddDependenciesTo(this);
+			Functions.Add(afunc);
 		}
 
 		public void Aggregate(double samplePoint)

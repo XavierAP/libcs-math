@@ -2,10 +2,10 @@
 {
 	public sealed class Average : ComplexAggregateFunction
 	{
-		public override void AddDependenciesTo(IBatchAggregator batchAggregator)
+		public override void AddDependenciesTo(IBatchAggregator parent)
 		{
-			batchAggregator.Add<Sum>();
-			batchAggregator.Add<Count>();
+			parent.Add<Sum>();
+			parent.Add<Count>();
 		}
 
 		public override double GetResult(IBatchAggregator parent)

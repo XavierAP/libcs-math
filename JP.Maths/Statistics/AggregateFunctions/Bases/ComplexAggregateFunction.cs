@@ -2,7 +2,7 @@
 {
 	public abstract class ComplexAggregateFunction : IAggregateFunction
 	{
-		public abstract void AddDependenciesTo(IBatchAggregator batchAggregator);
+		public abstract void AddDependenciesTo(IBatchAggregator parent);
 
 		public void Aggregate(double samplePoint)
 		{ }
