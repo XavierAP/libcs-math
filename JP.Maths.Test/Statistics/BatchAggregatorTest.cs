@@ -12,19 +12,19 @@ namespace JP.Maths.Statistics.Test
 			double[] data = { 0, 2, -9, 99, -3 };
 
 			var stats = new BatchAggregator();
-			stats.Add<Min>();
-			stats.Add<Max>();
-			stats.Add<Average>();
+			var min = stats.Add<Min>();
+			var max = stats.Add<Max>();
+			var avg = stats.Add<Average>();
 
 			foreach (var point in data)
 				stats.Aggregate(point);
 
 			const double tolerance = 1e-9;
-			Assert.AreEqual(data.Min(), stats.GetResult<Min>(), tolerance);
-			Assert.AreEqual(data.Max(), stats.GetResult<Max>(), tolerance);
-			Assert.AreEqual(data.Average(), stats.GetResult<Average>(), tolerance);
-			Assert.AreEqual(data.Count(), stats.GetResult<Count>(), tolerance);
+			Assert.AreEqual(data.Min(), min.Result, tolerance);
+			Assert.AreEqual(data.Max(), max.Result, tolerance);
+			Assert.AreEqual(data.Average(), avg.Result, tolerance);
 			Assert.AreEqual(data.Sum(), stats.GetResult<Sum>(), tolerance);
+			Assert.AreEqual(data.Count(), stats.GetResult<Count>());
 		}
 	}
 }

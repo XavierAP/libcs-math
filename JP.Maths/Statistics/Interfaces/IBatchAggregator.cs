@@ -4,8 +4,8 @@
 	{
 		void Clear();
 
-		void Add<F>() where F : IFunction, new();
+		F Add<F>() where F : class, IFunction, new();
 
-		double GetResult<F>() where F : IFunction;
+		double GetResult<F>() where F : class, IFunction;
 	}
 }

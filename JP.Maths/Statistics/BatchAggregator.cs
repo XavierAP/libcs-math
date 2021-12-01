@@ -16,13 +16,14 @@ namespace JP.Maths.Statistics
 			DependentFunctions.Clear();
 		}
 
-		public void Add<F>()
-			where F : IFunction, new()
+		public F Add<F>()
+			where F : class, IFunction, new()
 		{
-			bool isAlreadyAdded = null != GetFunction<F>();
-			if(isAlreadyAdded) return;
+			var f = GetFunction<F>();
+			bool isAlreadyAdded = null != f;
+			if(isAlreadyAdded) return f;
 
-			var f = new F();
+			f = new F();
 
 			if(f is IAggregateFunction af)
 			{
@@ -37,6 +38,7 @@ namespace JP.Maths.Statistics
 			{
 				throw new ArgumentException($"{nameof(BatchAggregator)} does not support {nameof(IFunction)} type {nameof(F)}.");
 			}
+			return f;
 		}
 
 		public void Aggregate(double samplePoint)
@@ -46,7 +48,7 @@ namespace JP.Maths.Statistics
 		}
 
 		public double GetResult<F>()
-			where F : IFunction
+			where F : class, IFunction
 		{
 			var afunc = GetFunction<F>();
 			if (null == afunc) throw new KeyNotFoundException(
@@ -56,12 +58,12 @@ namespace JP.Maths.Statistics
 		}
 
 		/// <summary>Returns null if this type has not been Added yet.</summary>
-		private IFunction GetFunction<F>()
-			where F : IFunction
+		private F GetFunction<F>()
+			where F : class, IFunction
 		{
 			return
-				AggregateFunctions.Find(a => a is F) ??
-				DependentFunctions.Find(a => a is F) as IFunction ;
+				AggregateFunctions.Find(a => a is F) as F ??
+				DependentFunctions.Find(a => a is F) as F ;
 		}
 	}
 }
