@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JP.Maths.Statistics
 {
-	/// <summary>Calculates multiple <see cref="IAggregateFunction"/>s
+	/// <summary>Calculates multiple <see cref="IFunction"/>s
 	/// by iterating only once through the sample or population.</summary>
 	public class BatchAggregator : IBatchAggregator
 	{
@@ -19,8 +19,8 @@ namespace JP.Maths.Statistics
 		public void Add<F>()
 			where F : IFunction, new()
 		{
-			if(IsAlreadyAdded<F>())
-				return;
+			bool isAlreadyAdded = null != GetFunction<F>();
+			if(isAlreadyAdded) return;
 
 			var f = new F();
 
@@ -45,12 +45,12 @@ namespace JP.Maths.Statistics
 				AggregateFunctions[i].Aggregate(samplePoint);
 		}
 
-		public double GetResult<T>()
-			where T : IFunction
+		public double GetResult<F>()
+			where F : IFunction
 		{
-			var afunc = GetFunction<T>();
+			var afunc = GetFunction<F>();
 			if (null == afunc) throw new KeyNotFoundException(
-				$"A {nameof(IFunction)} of type {nameof(T)} was not Added to this {nameof(BatchAggregator)}.");
+				$"A {nameof(IFunction)} of type {nameof(F)} was not Added to this {nameof(BatchAggregator)}.");
 
 			return afunc.Result;
 		}
@@ -62,12 +62,6 @@ namespace JP.Maths.Statistics
 			return
 				AggregateFunctions.Find(a => a is F) ??
 				DependentFunctions.Find(a => a is F) as IFunction ;
-		}
-
-		private bool IsAlreadyAdded<F>()
-			where F : IFunction, new()
-		{
-			return null != GetFunction<F>();
 		}
 	}
 }
