@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JP.Maths.Statistics
 {
@@ -6,46 +7,67 @@ namespace JP.Maths.Statistics
 	/// by iterating only once through the sample or population.</summary>
 	public class BatchAggregator : IBatchAggregator
 	{
-		private readonly List<IAggregateFunction> Functions = new List<IAggregateFunction>();
+		private readonly List<IAggregateFunction> AggregateFunctions = new List<IAggregateFunction>();
+		private readonly List<IDependentFunction> DependentFunctions = new List<IDependentFunction>();
 		
-		public void Add<T>()
-			where T : IAggregateFunction, new()
+		public void Clear()
 		{
-			if(IsAlreadyAdded<T>())
+			AggregateFunctions.Clear();
+			DependentFunctions.Clear();
+		}
+
+		public void Add<F>()
+			where F : IFunction, new()
+		{
+			if(IsAlreadyAdded<F>())
 				return;
 
-			var afunc = new T();
-			afunc.AddDependenciesTo(this);
-			Functions.Add(afunc);
+			var f = new F();
+
+			if(f is IAggregateFunction af)
+			{
+				AggregateFunctions.Add(af);
+			}
+			else if(f is IDependentFunction df)
+			{
+				df.SetDependencies(this);
+				DependentFunctions.Add(df);
+			}
+			else
+			{
+				throw new ArgumentException($"{nameof(BatchAggregator)} does not support {nameof(IFunction)} type {nameof(F)}.");
+			}
 		}
 
 		public void Aggregate(double samplePoint)
 		{
-			for(int i = 0; i < Functions.Count; ++i)
-				Functions[i].Aggregate(samplePoint);
+			for(int i = 0; i < AggregateFunctions.Count; ++i)
+				AggregateFunctions[i].Aggregate(samplePoint);
 		}
 
 		public double GetResult<T>()
-			where T : IAggregateFunction
+			where T : IFunction
 		{
 			var afunc = GetFunction<T>();
 			if (null == afunc) throw new KeyNotFoundException(
-				$"A {nameof(IAggregateFunction)} of type {nameof(T)} was not Added to this object.");
+				$"A {nameof(IFunction)} of type {nameof(T)} was not Added to this {nameof(BatchAggregator)}.");
 
-			return afunc.GetResult(this);
+			return afunc.Result;
 		}
 
 		/// <summary>Returns null if this type has not been Added yet.</summary>
-		private IAggregateFunction GetFunction<T>()
-			where T : IAggregateFunction
+		private IFunction GetFunction<F>()
+			where F : IFunction
 		{
-			return Functions.Find(a => a is T);
+			return
+				AggregateFunctions.Find(a => a is F) ??
+				DependentFunctions.Find(a => a is F) as IFunction ;
 		}
 
-		private bool IsAlreadyAdded<T>()
-			where T : IAggregateFunction, new()
+		private bool IsAlreadyAdded<F>()
+			where F : IFunction, new()
 		{
-			return null != GetFunction<T>();
+			return null != GetFunction<F>();
 		}
 	}
 }

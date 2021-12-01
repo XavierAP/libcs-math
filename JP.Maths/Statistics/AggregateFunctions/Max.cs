@@ -1,15 +1,13 @@
 ﻿namespace JP.Maths.Statistics
 {
-	public sealed class Max : SimpleAggregateFunction
+	public sealed class Max : IAggregateFunction
 	{
-		private double Result = double.NegativeInfinity;
+		public double Result { get; private set; } = double.NegativeInfinity;
 
-		public override void Aggregate(double samplePoint)
+		public void Aggregate(double samplePoint)
 		{
 			if (samplePoint > Result)
 				Result = samplePoint;
 		}
-
-		public override double GetResult() => Result;
 	}
 }

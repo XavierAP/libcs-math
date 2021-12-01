@@ -2,8 +2,10 @@
 {
 	public interface IBatchAggregator : IAggregator
 	{
-		void Add<T>() where T : IAggregateFunction, new();
+		void Clear();
 
-		double GetResult<T>() where T : IAggregateFunction;
+		void Add<F>() where F : IFunction, new();
+
+		double GetResult<F>() where F : IFunction;
 	}
 }

@@ -1,18 +1,18 @@
 ﻿namespace JP.Maths.Statistics
 {
-	public sealed class Average : ComplexAggregateFunction
+	public sealed class Average : IDependentFunction
 	{
-		public override void AddDependenciesTo(IBatchAggregator parent)
+		private IBatchAggregator Parent;
+
+		public void SetDependencies(IBatchAggregator parent)
 		{
-			parent.Add<Sum>();
-			parent.Add<Count>();
+			Parent = parent;
+			Parent.Add<Sum>();
+			Parent.Add<Count>();
 		}
 
-		public override double GetResult(IBatchAggregator parent)
-		{
-			return
-				parent.GetResult<Sum>() /
-				parent.GetResult<Count>() ;
-		}
+		public double Result =>
+			Parent.GetResult<Sum>() /
+			Parent.GetResult<Count>() ;
 	}
 }

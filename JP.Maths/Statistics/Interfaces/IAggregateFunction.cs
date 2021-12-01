@@ -1,9 +1,6 @@
 ﻿namespace JP.Maths.Statistics
 {
-	public interface IAggregateFunction : IAggregator
+	public interface IAggregateFunction : IFunction, IAggregator
 	{
-		void AddDependenciesTo(IBatchAggregator parent);
-
-		double GetResult(IBatchAggregator parent);
 	}
 }

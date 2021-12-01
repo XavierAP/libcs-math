@@ -1,11 +1,9 @@
 ﻿namespace JP.Maths.Statistics
 {
-	public sealed class Count : SimpleAggregateFunction
+	public sealed class Count : IAggregateFunction
 	{
-		private double Result = 0;
+		public double Result { get; private set; } = 0;
 
-		public override void Aggregate(double samplePoint) => ++Result;
-
-		public override double GetResult() => Result;
+		public void Aggregate(double samplePoint) => ++Result;
 	}
 }
