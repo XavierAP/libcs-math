@@ -20,17 +20,15 @@ namespace JP.Maths.Statistics
 		public F Add<F>()
 			where F : class, IFunction, new()
 		{
-			var f = GetFunction<F>();
-			if(f != null)
-				return f;
+			var func = GetFunction<F>(out var wasAlreadyAdded);
+			if(wasAlreadyAdded)
+				return func;
 
-			f = new F();
-
-			if(f is IAggregateFunction af)
+			if(func is IAggregateFunction af)
 			{
 				AggregateFunctions.Add(af);
 			}
-			else if(f is IDependentFunction df)
+			else if(func is IDependentFunction df)
 			{
 				df.SetDependencies(this);
 				DependentFunctions.Add(df);
@@ -39,7 +37,7 @@ namespace JP.Maths.Statistics
 			{
 				throw new ArgumentException($"{nameof(BatchAggregator)} does not support {nameof(IFunction)} type {nameof(F)}.");
 			}
-			return f;
+			return func;
 		}
 
 		public void Aggregate(double samplePoint)
@@ -48,13 +46,15 @@ namespace JP.Maths.Statistics
 				AggregateFunctions[i].Aggregate(samplePoint);
 		}
 
-		/// <summary>Returns null if this type has not been Added yet.</summary>
-		private F GetFunction<F>()
-			where F : class, IFunction
+		private F GetFunction<F>(out bool wasAlreadyAdded)
+			where F : class, IFunction, new()
 		{
-			return
+			var func =
 				AggregateFunctions.Find(a => a is F) as F ??
 				DependentFunctions.Find(a => a is F) as F ;
+
+			return (wasAlreadyAdded = func != null) ?
+				func : new F();
 		}
 	}
 }
