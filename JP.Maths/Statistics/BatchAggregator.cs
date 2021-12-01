@@ -16,12 +16,13 @@ namespace JP.Maths.Statistics
 			DependentFunctions.Clear();
 		}
 
+		/// <summary>If the same type was already added, returns existing instance.</summary>
 		public F Add<F>()
 			where F : class, IFunction, new()
 		{
 			var f = GetFunction<F>();
-			bool isAlreadyAdded = null != f;
-			if(isAlreadyAdded) return f;
+			if(f != null)
+				return f;
 
 			f = new F();
 
@@ -45,16 +46,6 @@ namespace JP.Maths.Statistics
 		{
 			for(int i = 0; i < AggregateFunctions.Count; ++i)
 				AggregateFunctions[i].Aggregate(samplePoint);
-		}
-
-		public double GetResult<F>()
-			where F : class, IFunction
-		{
-			var afunc = GetFunction<F>();
-			if (null == afunc) throw new KeyNotFoundException(
-				$"A {nameof(IFunction)} of type {nameof(F)} was not Added to this {nameof(BatchAggregator)}.");
-
-			return afunc.Result;
 		}
 
 		/// <summary>Returns null if this type has not been Added yet.</summary>

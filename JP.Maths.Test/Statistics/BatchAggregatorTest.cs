@@ -15,6 +15,8 @@ namespace JP.Maths.Statistics.Test
 			var min = stats.Add<Min>();
 			var max = stats.Add<Max>();
 			var avg = stats.Add<Average>();
+			var sum = stats.Add<Sum>();
+			var count = stats.Add<Count>();
 
 			foreach (var point in data)
 				stats.Aggregate(point);
@@ -23,8 +25,8 @@ namespace JP.Maths.Statistics.Test
 			Assert.AreEqual(data.Min(), min.Result, tolerance);
 			Assert.AreEqual(data.Max(), max.Result, tolerance);
 			Assert.AreEqual(data.Average(), avg.Result, tolerance);
-			Assert.AreEqual(data.Sum(), stats.GetResult<Sum>(), tolerance);
-			Assert.AreEqual(data.Count(), stats.GetResult<Count>());
+			Assert.AreEqual(data.Sum(), sum.Result, tolerance);
+			Assert.AreEqual(data.Count(), count.Result);
 		}
 	}
 }

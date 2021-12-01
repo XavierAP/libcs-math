@@ -5,7 +5,5 @@
 		void Clear();
 
 		F Add<F>() where F : class, IFunction, new();
-
-		double GetResult<F>() where F : class, IFunction;
 	}
 }

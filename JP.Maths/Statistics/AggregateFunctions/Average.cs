@@ -2,17 +2,15 @@
 {
 	public sealed class Average : IDependentFunction
 	{
-		private IBatchAggregator Parent;
+		private Sum Sum;
+		private Count Count;
 
 		public void SetDependencies(IBatchAggregator parent)
 		{
-			Parent = parent;
-			Parent.Add<Sum>();
-			Parent.Add<Count>();
+			Sum = parent.Add<Sum>();
+			Count = parent.Add<Count>();
 		}
 
-		public double Result =>
-			Parent.GetResult<Sum>() /
-			Parent.GetResult<Count>() ;
+		public double Result => Sum.Result / Count.Result;
 	}
 }
