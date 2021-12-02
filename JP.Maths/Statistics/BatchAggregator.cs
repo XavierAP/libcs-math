@@ -20,9 +20,11 @@ namespace JP.Maths.Statistics
 		public F Add<F>()
 			where F : class, IFunction, new()
 		{
-			var func = GetFunction<F>(out var wasAlreadyAdded);
-			if(wasAlreadyAdded)
+			var func = GetFunction<F>();
+			if(func != null)
 				return func;
+
+			func = new F();
 
 			if(func is IAggregateFunction af)
 			{
@@ -46,15 +48,13 @@ namespace JP.Maths.Statistics
 				AggregateFunctions[i].Aggregate(samplePoint);
 		}
 
-		private F GetFunction<F>(out bool wasAlreadyAdded)
-			where F : class, IFunction, new()
+		/// <summary>Returns null if this type has not been Added yet.</summary>
+		private F GetFunction<F>()
+			where F : class, IFunction
 		{
-			var func =
+			return
 				AggregateFunctions.Find(a => a is F) as F ??
 				DependentFunctions.Find(a => a is F) as F ;
-
-			return (wasAlreadyAdded = func != null) ?
-				func : new F();
 		}
 	}
 }
