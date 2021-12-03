@@ -2,6 +2,6 @@
 {
 	public interface IFunction
 	{
-		double Result { get; }
+		double GetResult();
 	}
 }

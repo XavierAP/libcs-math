@@ -2,8 +2,10 @@
 {
 	public sealed class Count : IAggregateFunction
 	{
-		public double Result { get; private set; } = 0;
+		private double Result = 0;
 
 		public void Aggregate(double samplePoint) => ++Result;
+
+		public double GetResult() => Result;
 	}
 }

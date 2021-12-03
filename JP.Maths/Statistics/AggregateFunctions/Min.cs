@@ -2,12 +2,14 @@
 {
 	public sealed class Min : IAggregateFunction
 	{
-		public double Result { get; private set; } = double.PositiveInfinity;
+		private double Result = double.PositiveInfinity;
 
 		public void Aggregate(double samplePoint)
 		{
 			if (samplePoint < Result)
 				Result = samplePoint;
 		}
+
+		public double GetResult() => Result;
 	}
 }

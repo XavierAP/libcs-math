@@ -2,12 +2,14 @@
 {
 	public sealed class Max : IAggregateFunction
 	{
-		public double Result { get; private set; } = double.NegativeInfinity;
+		private double Result = double.NegativeInfinity;
 
 		public void Aggregate(double samplePoint)
 		{
 			if (samplePoint > Result)
 				Result = samplePoint;
 		}
+
+		public double GetResult() => Result;
 	}
 }

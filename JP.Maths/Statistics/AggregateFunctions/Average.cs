@@ -11,6 +11,6 @@
 			Count = parent.Add<Count>();
 		}
 
-		public double Result => Sum.Result / Count.Result;
+		public double GetResult() => Sum.GetResult() / Count.GetResult();
 	}
 }
