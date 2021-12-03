@@ -3,7 +3,7 @@
 namespace JP.Maths.Statistics.Test
 {
 	[TestFixture]
-	public class BatchAggregatorTest
+	public class StatisticsTest
 	{
 		[Test]
 		public void AllFunctions()
