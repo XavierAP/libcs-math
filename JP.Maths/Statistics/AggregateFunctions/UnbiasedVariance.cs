@@ -14,7 +14,7 @@
 		public double GetResult()
 		{
 			var count = Count.GetResult();
-			return UncorrectedVariance.GetResult() * count / (count -1);
+			return UncorrectedVariance.GetResult() * count / (count - 1);
 		}
 	}
 }
