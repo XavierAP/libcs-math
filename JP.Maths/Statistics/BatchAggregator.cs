@@ -48,6 +48,16 @@ namespace JP.Maths.Statistics
 				AggregateFunctions[i].Aggregate(samplePoint);
 		}
 
+		public double GetResult<F>()
+			where F : class, IFunction
+		{
+			var afunc = GetFunction<F>();
+			if (null == afunc) throw new KeyNotFoundException(
+				$"A {nameof(IFunction)} of type {nameof(F)} was not Added to this {nameof(BatchAggregator)}.");
+
+			return afunc.GetResult();
+		}
+
 		/// <summary>Returns null if this type has not been Added yet.</summary>
 		private F GetFunction<F>()
 			where F : class, IFunction
