@@ -13,7 +13,7 @@ namespace JP.Maths.Statistics
 			var population = Enumerable.Range(-9999999, 99999999).ToArray();
 
 			WriteLine("        System.Linq:");
-			for(int i = 0; i < repeats; i++)
+			for (int i = 0; i < repeats; i++)
 			{
 				timer.Restart();
 
@@ -24,15 +24,12 @@ namespace JP.Maths.Statistics
 				timer.Stop();
 				WriteLine($"Min: {min}, Max: {max}, Average: {avg}, TIME: {timer.ElapsedMilliseconds:N}");
 			}
-			
-			WriteLine("        JP.Maths.Statistics:");
-			var stats = new BatchAggregator();
-			stats.Add<Min>();
-			stats.Add<Max>();
-			stats.Add<Average>();
 
-			for(int i = 0; i < repeats; i++)
+			WriteLine("        JP.Maths.Statistics:");
+
+			for (int i = 0; i < repeats; i++)
 			{
+				var stats = GetMinMaxAverageCalculator();
 				timer.Restart();
 
 				foreach (var point in population)
@@ -42,6 +39,15 @@ namespace JP.Maths.Statistics
 				var (min, max, avg) = (stats.GetResult<Min>(), stats.GetResult<Max>(), stats.GetResult<Average>());
 				WriteLine($"Min: {min}, Max: {max}, Average: {avg}, TIME: {timer.ElapsedMilliseconds:N}");
 			}
+		}
+
+		private static BatchAggregator GetMinMaxAverageCalculator()
+		{
+			var stats = new BatchAggregator();
+			stats.Add<Min>();
+			stats.Add<Max>();
+			stats.Add<Average>();
+			return stats;
 		}
 	}
 }
