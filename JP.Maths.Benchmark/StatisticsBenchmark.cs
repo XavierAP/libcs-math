@@ -55,7 +55,7 @@ namespace JP.Maths.Statistics
 		}
 		
 		[Benchmark]
-		public void MineArray()
+		public void MyArray()
 		{
 			var stats = new BatchAggregator();
 			stats.Add<Min>();
@@ -73,7 +73,7 @@ namespace JP.Maths.Statistics
 		}
 		
 		[Benchmark]
-		public void MineIterator()
+		public void MyIterator()
 		{
 			var stats = new BatchAggregator();
 			stats.Add<Min>();
