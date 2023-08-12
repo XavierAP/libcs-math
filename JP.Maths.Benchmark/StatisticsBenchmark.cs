@@ -9,6 +9,7 @@ namespace JP.Maths.Statistics
 {
 	using Scalar = Int32;
 
+	[MemoryDiagnoser]
 	public class StatisticsBenchmark
 	{
 		static void Main() => BenchmarkRunner.Run<StatisticsBenchmark>();
@@ -58,16 +59,16 @@ namespace JP.Maths.Statistics
 		public void MyArray()
 		{
 			var stats = new BatchAggregator();
-			stats.Add<Min>();
-			stats.Add<Max>();
-			stats.Add<Average>();
+			var minStat = stats.Add<Min>();
+			var maxStat = stats.Add<Max>();
+			var avgStat = stats.Add<Average>();
 
 			foreach (var point in populationArray)
 				stats.Aggregate(point);
 
-			var min = stats.GetResult<Min>();
-			var max = stats.GetResult<Max>();
-			var avg = stats.GetResult<Average>();
+			var min = minStat.GetResult();
+			var max = maxStat.GetResult();
+			var avg = avgStat.GetResult();
 
 			WriteLine($"Min: {min}, Max: {max}, Average: {avg}");
 		}
@@ -76,16 +77,16 @@ namespace JP.Maths.Statistics
 		public void MyIterator()
 		{
 			var stats = new BatchAggregator();
-			stats.Add<Min>();
-			stats.Add<Max>();
-			stats.Add<Average>();
+			var minStat = stats.Add<Min>();
+			var maxStat = stats.Add<Max>();
+			var avgStat = stats.Add<Average>();
 
 			foreach (var point in populationIterator)
 				stats.Aggregate(point);
-
-			var min = stats.GetResult<Min>();
-			var max = stats.GetResult<Max>();
-			var avg = stats.GetResult<Average>();
+			
+			var min = minStat.GetResult();
+			var max = maxStat.GetResult();
+			var avg = avgStat.GetResult();
 
 			WriteLine($"Min: {min}, Max: {max}, Average: {avg}");
 		}

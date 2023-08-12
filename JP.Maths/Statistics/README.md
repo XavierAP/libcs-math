@@ -18,5 +18,6 @@ they can be calculated from other functions. So a more naive implementation dire
 Currently implemented: see classes in [AggregateFunctions](/JP.Maths/Statistics/AggregateFunctions/).
 
 ## Performance
-Linq (in modern .NET versions) _will_ outperform this for calculation of Min, Max and Average (in most modern machines),
-since these are implemented with vectorization (SIMD).
+System.Linq (in modern .NET versions) _will_ outperform this (in most modern machines)
+for calculating Min, Max and Average, since these are implemented with vectorization (SIMD)
+-- see [StatisticsBenchmark.results.txt](/JP.Maths.Benchmark/StatisticsBenchmark.results.txt)

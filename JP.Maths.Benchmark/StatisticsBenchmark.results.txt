@@ -1,0 +1,14 @@
+BenchmarkDotNet v0.13.7, Windows 10 (10.0.19045.3324/22H2/2022Update)
+AMD Ryzen 7 3700X, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 7.0.306
+  [Host]     : .NET 7.0.9 (7.0.923.32018), X64 RyuJIT AVX2
+  DefaultJob : .NET 7.0.9 (7.0.923.32018), X64 RyuJIT AVX2
+
+
+|             Method |        Mean |     Error |    StdDev |   Allocated |
+|------------------- |------------:|----------:|----------:|------------:|
+|          LinqArray |    60.63 ms |  0.725 ms |  0.605 ms |       220 B |
+|       LinqIterator | 1,243.55 ms | 22.872 ms | 21.395 ms |       840 B |
+| LinqIteratorCached |   123.69 ms |  0.223 ms |  0.186 ms | 400000344 B |
+|            MyArray | 1,293.32 ms |  3.396 ms |  3.010 ms |      2056 B |
+|         MyIterator | 1,622.26 ms | 25.876 ms | 21.607 ms |      2096 B |
