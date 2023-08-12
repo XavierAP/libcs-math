@@ -1,5 +1,5 @@
 # JP.Maths.Statistics
-[BatchAggregator](/JP.Maths/Statistics/BatchAggregator.cs) allows to calculate multiple statistics aggregate functions
+[BatchAggregator](/JP.Maths/Statistics/BatchAggregator.cs) allows to calculate multiple statistical aggregate functions
 by iterating the sample or population only once and minimizing the number of operations.
 See how to use in [StatisticsTest](/JP.Maths.Test/Statistics/StatisticsTest.cs).
 
@@ -27,4 +27,3 @@ since System.Linq implements these with vectorization (SIMD).
 See:
 * [StatisticsBenchmark.results.txt](/JP.Maths.Benchmark/StatisticsBenchmark.results.txt)
 * https://github.com/dotnet/runtime/pull/64624
-
