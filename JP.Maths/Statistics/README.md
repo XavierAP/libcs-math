@@ -13,7 +13,9 @@ however note "performance" below.
 
 * Those that implement [IDependentFunction](/JP.Maths/Statistics/Interfaces/IDependentFunction.cs):
 they can be calculated from other functions. So a more naive implementation directly based on their definition would be suboptimal.
-	+ For example [(uncorrected) variance](/JP.Maths/Statistics/AggregateFunctions/UncorrectedVariance.cs) = sum((x - mean)²) = sum(x²)/N - mean(x)²
+	+ For example
+	[(uncorrected) variance](/JP.Maths/Statistics/AggregateFunctions/UncorrectedVariance.cs)
+	= sum((x - mean(x))²)/N = sum(x²)/N - mean(x)²
 
 Currently implemented: see classes in [AggregateFunctions](/JP.Maths/Statistics/AggregateFunctions/).
 
