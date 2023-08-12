@@ -21,5 +21,10 @@ Currently implemented: see classes in [AggregateFunctions](/JP.Maths/Statistics/
 
 ## Performance
 System.Linq (in modern .NET versions) _will_ outperform this (in most modern machines)
-for calculating Min, Max and Average, since these are implemented with vectorization (SIMD)
--- see [StatisticsBenchmark.results.txt](/JP.Maths.Benchmark/StatisticsBenchmark.results.txt)
+for calculating Min, Max, Sum and Average,
+as long as the call is made on an array or List,
+since System.Linq implements these with vectorization (SIMD).
+See:
+* [StatisticsBenchmark.results.txt](/JP.Maths.Benchmark/StatisticsBenchmark.results.txt)
+* https://github.com/dotnet/runtime/pull/64624
+
