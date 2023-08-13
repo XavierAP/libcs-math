@@ -5,10 +5,12 @@ AMD Ryzen 7 3700X, 1 CPU, 16 logical and 8 physical cores
   DefaultJob : .NET 7.0.9 (7.0.923.32018), X64 RyuJIT AVX2
 
 
-|             Method |        Mean |     Error |    StdDev |   Allocated |
-|------------------- |------------:|----------:|----------:|------------:|
-|          LinqArray |    60.63 ms |  0.725 ms |  0.605 ms |       220 B |
-|       LinqIterator | 1,243.55 ms | 22.872 ms | 21.395 ms |       840 B |
-| LinqIteratorCached |   123.69 ms |  0.223 ms |  0.186 ms | 400000344 B |
-|            MyArray | 1,293.32 ms |  3.396 ms |  3.010 ms |      2056 B |
-|         MyIterator | 1,622.26 ms | 25.876 ms | 21.607 ms |      2096 B |
+|             Method |       Mean |     Error |    StdDev |     Median |     Gen0 |     Gen1 |     Gen2 |  Allocated |
+|------------------- |-----------:|----------:|----------:|-----------:|---------:|---------:|---------:|-----------:|
+|          LinqArray |  28.579 ms | 0.1294 ms | 0.1211 ms |  28.597 ms |        - |        - |        - |      139 B |
+|       LinqIterator | 177.644 ms | 0.8656 ms | 0.6758 ms | 177.373 ms |        - |        - |        - |      464 B |
+| LinqIteratorCached |  49.448 ms | 0.4106 ms | 0.3841 ms |  49.580 ms | 428.5714 | 428.5714 | 428.5714 | 40000374 B |
+|            MyArray | 100.584 ms | 1.5410 ms | 1.2868 ms | 100.535 ms |        - |        - |        - |      584 B |
+|         MyIterator | 146.305 ms | 1.5137 ms | 1.3419 ms | 146.319 ms |        - |        - |        - |      692 B |
+|         SmartArray |   7.687 ms | 0.0318 ms | 0.0298 ms |   7.697 ms |        - |        - |        - |      117 B |
+|      SmartIterator |  54.586 ms | 1.0508 ms | 1.0790 ms |  55.422 ms |        - |        - |        - |      220 B |

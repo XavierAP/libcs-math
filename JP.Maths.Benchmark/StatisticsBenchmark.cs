@@ -7,7 +7,7 @@ using static System.Console;
 
 namespace JP.Maths.Statistics
 {
-	using Scalar = Int32;
+	using Scalar = Single;
 
 	[MemoryDiagnoser]
 	public class StatisticsBenchmark
@@ -20,7 +20,7 @@ namespace JP.Maths.Statistics
 		[GlobalSetup]
 		public void Setup()
 		{
-			populationIterator = Enumerable.Range(-9999999, 99999999);
+			populationIterator = Enumerable.Range(-999999, 9999999).Select(i => (Scalar)i);
 			populationArray = populationIterator.ToArray();
 		}
 
@@ -29,9 +29,9 @@ namespace JP.Maths.Statistics
 		{
 			var min = populationArray.Min();
 			var max = populationArray.Max();
-			var avg = populationArray.Average();
+			var sum = populationArray.Sum();
 
-			WriteLine($"Min: {min}, Max: {max}, Average: {avg}");
+			WriteLine($"Min: {min}, Max: {max}, Sum: {sum}");
 		}
 
 		[Benchmark]
@@ -39,9 +39,9 @@ namespace JP.Maths.Statistics
 		{
 			var min = populationIterator.Min();
 			var max = populationIterator.Max();
-			var avg = populationIterator.Average();
+			var sum = populationIterator.Sum();
 
-			WriteLine($"Min: {min}, Max: {max}, Average: {avg}");
+			WriteLine($"Min: {min}, Max: {max}, Sum: {sum}");
 		}
 
 		[Benchmark]
@@ -50,9 +50,9 @@ namespace JP.Maths.Statistics
 			var population = populationIterator.ToArray();
 			var min = population.Min();
 			var max = population.Max();
-			var avg = population.Average();
+			var sum = population.Sum();
 
-			WriteLine($"Min: {min}, Max: {max}, Average: {avg}");
+			WriteLine($"Min: {min}, Max: {max}, Sum: {sum}");
 		}
 		
 		[Benchmark]
@@ -61,16 +61,16 @@ namespace JP.Maths.Statistics
 			var stats = new BatchAggregator();
 			var minStat = stats.Add<Min>();
 			var maxStat = stats.Add<Max>();
-			var avgStat = stats.Add<Average>();
+			var sumStat = stats.Add<Sum>();
 
 			foreach (var point in populationArray)
 				stats.Aggregate(point);
 
 			var min = minStat.GetResult();
 			var max = maxStat.GetResult();
-			var avg = avgStat.GetResult();
+			var sum = sumStat.GetResult();
 
-			WriteLine($"Min: {min}, Max: {max}, Average: {avg}");
+			WriteLine($"Min: {min}, Max: {max}, Sum: {sum}");
 		}
 		
 		[Benchmark]
@@ -79,16 +79,50 @@ namespace JP.Maths.Statistics
 			var stats = new BatchAggregator();
 			var minStat = stats.Add<Min>();
 			var maxStat = stats.Add<Max>();
-			var avgStat = stats.Add<Average>();
+			var sumStat = stats.Add<Sum>();
 
 			foreach (var point in populationIterator)
 				stats.Aggregate(point);
 			
 			var min = minStat.GetResult();
 			var max = maxStat.GetResult();
-			var avg = avgStat.GetResult();
+			var sum = sumStat.GetResult();
 
-			WriteLine($"Min: {min}, Max: {max}, Average: {avg}");
+			WriteLine($"Min: {min}, Max: {max}, Sum: {sum}");
+		}
+
+		[Benchmark]
+		public void SmartArray()
+		{
+			float
+				min = Scalar.MaxValue,
+				max = Scalar.MinValue,
+				sum = 0;
+
+			foreach (var point in populationArray)
+			{
+				sum += point;
+				if(point < min) min = point;
+				if(point > max) max = point;
+			}
+			WriteLine($"Min: {min}, Max: {max}, Sum: {sum}");
+		}
+
+		[Benchmark]
+		public void SmartIterator()
+		{
+			float
+				min = Scalar.MaxValue,
+				max = Scalar.MinValue,
+				sum = 0;
+
+			foreach (var point in populationIterator)
+			{
+				sum += point;
+				if(point < min) min = point;
+				if(point > max) max = point;
+			}
+			WriteLine($"Min: {min}, Max: {max}, Sum: {sum}");
 		}
 	}
 }
