@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace JP.Maths.Statistics.Test
 {
@@ -8,7 +9,7 @@ namespace JP.Maths.Statistics.Test
 		[Test]
 		public void AllFunctions()
 		{
-			double[] data = { 2, 0, -5, 7, -3 };
+			Span<double> data = [ 2, 0, -5, 7, -3 ];
 
 			var stats = new BatchAggregator();
 			var min = stats.Add<Min>();
